@@ -1,0 +1,66 @@
+name: EJ DotNet Build Octo Create Release CI
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a one-line script
+        run: echo Hello from Octo Organization
+
+      - name: Octo CLI Install
+        uses: OctopusDeploy/install-octopus-cli-action@v1
+        with:
+          # The Octopus CLI Version is set to be latest.
+          version: latest
+
+      - name: Nuget Setup Install
+        uses: nuget/setup-nuget@v1
+        with:
+          # Nuget Packge Vesrion is set to be 5.X, If you want to change, please do so.
+          nuget-version: "5.x"
+
+      - name: DotNet Install
+        uses: actions/setup-dotnet@v3
+        with:
+          #DotNet-Version has been spesified to 6.0.x. If you want to change, Please do so.
+          dotnet-version: |
+            6.0.x
+      
+      - name: Nuget Restore
+        run: nuget restore "Include the Solution File Path .sln"
+          
+      - name: Dot Net Restore & Build
+        run: |
+          echo "Installing Dependency"
+          dotnet restore
+          echo "DotNet Build"
+          dotnet build "Include the Solution File Path .sln" --configuration Release --no-restore
+
+      - name: Octopus Pack NuPkg
+        run: |
+          octo pack --id="Package ID Name" --format="Package Format Either NuPkg\Zip" --version="Package Version" --basePath="Base Package Loction" --outFolder="Package Output Location" 
+    
+      - name: Push Package Octopus
+        uses: OctopusDeploy/push-package-action@v2
+        with:
+          packages: "Package ID Name"
+        
+      - name: Publish Octopus Build Information
+        uses: OctopusDeploy/push-build-information-action@v1
+        with:
+          packages: "Package ID Name"
+          version: "Package Version"
+    
+      - name: Create a Release in Octopus
+        uses: OctopusDeploy/create-release-action@v2
+        with:
+          project: "Octopus Project Name"  

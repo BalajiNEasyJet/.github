@@ -1,0 +1,8 @@
+{
+    "name": "EJ DotNet Build Octo Create Release CI",
+    "description": "EJ DotNet Build Octo Create Release CI",
+    "iconName": "example-icon",
+    "categories": [
+        "C#"
+    ]
+}
