@@ -1,0 +1,6 @@
+{
+    "name": "EJ DotNetBuild OctoCR CI",
+    "description": "This is a Starter Workflow for Dot.Net Application Building, Nuget Packaging, Octopus Package push and Ocotpus Create Release CI Pipeline",
+    "iconName": "demo-icon",
+    "categories": [ ".net", "c#", "ej"],
+}
