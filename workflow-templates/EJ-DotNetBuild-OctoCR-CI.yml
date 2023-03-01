@@ -1,0 +1,48 @@
+#Author: Balaji N
+#Description: This is a Starter Workflow for Dot.Net Application Building, Nuget Packaging, Octopus Package push and Ocotpus Create Release
+#Date: 
+
+name: EJ DotNetBuild OctoCR CI 
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+  #workflow_dispatch:
+
+env:
+  #The below variables needs to be declared in your repo under Secrets section in repo setting and pass the values.
+  OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY_VALUE }}
+  OCTOPUS_URL: ${{ secrets.OCTOPUS_HOST_URL }}
+  OCTOPUS_HOST: ${{ secrets.OCTOPUS_HOST_URL }}
+  OCTOPUS_SPACE: ${{ secrets.OCTOPUS_SPACE_NAME }}
+
+permissions:
+  contents: write
+
+jobs:
+  EresEmail:
+    runs-on: [ selfhosted, D1CETSTGHRW001]
+    steps:
+      - name: checkoutm
+        uses: actions/checkout@v3
+
+      - name: Octo CLI Install
+        uses: OctopusDeploy/install-octopus-cli-action@v1
+        with:
+          # The Octopus CLI Version is set to be latest.
+          version: latest
+
+      - name: Nuget Setup Install
+        uses: nuget/setup-nuget@v1
+        with:
+          # Nuget Packge Vesrion is set to be 5.X, If you want to change, please do so.
+          nuget-version: "5.x"
+
+      - name: DotNet Install
+        uses: actions/setup-dotnet@v3
+        with:
+          #DotNet-Version has been spesified to 6.0.x. If you want to change, Please do so.
+          dotnet-version: |
+            6.0.x
